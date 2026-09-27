@@ -1,0 +1,1 @@
+{"status":"Valid","reason":"Signature is ok","isLegacy":false,"attestation":{"version":1,"format":"archive","integrity":"sha256-9dOWWq3LrfpemkyE7Qco0t6zxKl1HTEuGDVTDk4aUP8=","packageName":"com.unity.recorder","packageVersion":"5.1.7","publishingChannel":"unity","entitlementKeys":[],"artifactType":"upmPackage"}}
