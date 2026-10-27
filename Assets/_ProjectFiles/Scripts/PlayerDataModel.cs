@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerDataModel
+public class PlayerDataModel : MonoBehaviour 
 {
     private static string scrapes = "ScrapesAmount";
     private static string health = "PlayerHealth";
