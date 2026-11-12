@@ -9,10 +9,11 @@ public class HealthHandler : MonoBehaviour
     public event Action OnDeath;
     public event Action OnHealed;
     public event Action OnResetHealth;
+    public event Action<float> OnHealthChanged;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurrHealth { get => currHealth;}
     bool isDead = false;
-
+    private bool canTakeDmg = true;
     private void Start()
     {
         if (this.gameObject.CompareTag("Player")) { 
@@ -21,20 +22,26 @@ public class HealthHandler : MonoBehaviour
         }
         else currHealth = maxHealth;
     }
+    public void InitializeHealth(float health)
+    {
+        currHealth = health > 0 ? health : maxHealth;
+        OnHealthChanged?.Invoke(currHealth);
+    }
     public void TakeDmg(float dmg)
     {
         if (isDead) return;
-        currHealth -= dmg;
+        if(!canTakeDmg) return;
+
+        currHealth = Mathf.Max(currHealth-dmg,0);
+        OnHealthChanged?.Invoke(currHealth);
+
         if (currHealth <= 0)
         {
-            currHealth = 0;
             isDead = true;
-            if(this.gameObject.CompareTag("Player")) PlayerDataModel.SaveHealth(maxHealth);
             OnDeath?.Invoke();
         }
         else
         {
-            if(this.gameObject.CompareTag("Player")) PlayerDataModel.SaveHealth(currHealth);
             OnHit?.Invoke();
         }
     }
@@ -52,5 +59,13 @@ public class HealthHandler : MonoBehaviour
         if (this.gameObject.CompareTag("Player")) PlayerDataModel.SaveHealth(currHealth);
         OnResetHealth?.Invoke();
     }
-    
+    public void DisableTakingDamage()
+    {
+        canTakeDmg = false;
+    }
+    public void EnableTakingDamage()
+    {
+        canTakeDmg = true;
+    }
+
 }

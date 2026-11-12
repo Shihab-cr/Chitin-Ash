@@ -11,7 +11,7 @@ public class PlayerMovementHandler : MonoBehaviour
     private Rigidbody playerRb;
     private bool canMove = true;
     private Quaternion previousRotation;
-
+    private Vector2 moveDir = Vector2.zero;
     [SerializeField] private InputActionReference moveRef;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,7 +27,7 @@ public class PlayerMovementHandler : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Vector2 moveDir = moveRef.action.ReadValue<Vector2>();
+        moveDir = moveRef.action.ReadValue<Vector2>();
         HandlePlayerMovement(moveDir);
     }
     public void HandlePlayerMovement(Vector2 moveDir)
@@ -79,6 +79,10 @@ public class PlayerMovementHandler : MonoBehaviour
         transform.localRotation = Quaternion.Slerp(currRotation, targetRotation, turnSpeed*Time.deltaTime);
         
         
+    }
+    public Vector2 GetMoveDirection()
+    {
+        return moveDir;
     }
     
     public void DisablePlayerMovement()
