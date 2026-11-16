@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class HealthHandler : MonoBehaviour
+public class HealthHandler : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100f;
     private float currHealth;
-    public event Action OnHit;
-    public event Action OnDeath;
-    public event Action OnHealed;
-    public event Action OnResetHealth;
-    public event Action<float> OnHealthChanged;
+    public UnityEvent OnHit;
+    public UnityEvent OnDeath;
+    public UnityEvent OnHealed;
+    public UnityEvent OnResetHealth;
+    public UnityEvent<float> OnHealthChanged;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurrHealth { get => currHealth;}
     bool isDead = false;

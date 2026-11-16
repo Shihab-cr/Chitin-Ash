@@ -5,13 +5,14 @@ public class PlayerDodgeLogic : MonoBehaviour
 {
     private Rigidbody playerRb;
     private PlayerMovementHandler playerMovementHandler;
+    private PlayerStaminaManager playerStaminaManager;
     private HealthHandler healthHandler;
     private Camera mainCamera;
     [SerializeField] private float dodgeForce = 10f;
     [SerializeField] private float dodgeCoolDown = 0.5f;
     [SerializeField] private float dodgeDuration = 0.35f;
     [SerializeField] private float dodgeIframeTime = 0.2f;
-    
+    [SerializeField] private float staminaCost = 10f;
     private Coroutine dodgeCoolDownCoroutine;
     private bool canDodge = true;
     
@@ -20,6 +21,7 @@ public class PlayerDodgeLogic : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         healthHandler = GetComponent<HealthHandler>();
+        playerStaminaManager = GetComponent<PlayerStaminaManager>();
         mainCamera = Camera.main;
         playerMovementHandler = GetComponent<PlayerMovementHandler>();
     }
@@ -27,6 +29,7 @@ public class PlayerDodgeLogic : MonoBehaviour
     {
         if (playerMovementHandler == null) return;
         if (!canDodge) return;
+        if(playerStaminaManager == null || !playerStaminaManager.UseStamina(staminaCost)) return;
         Vector2 moveDir = playerMovementHandler.GetMoveDirection();
         Vector3 dodgeDirection;
         if(moveDir.magnitude == 0)

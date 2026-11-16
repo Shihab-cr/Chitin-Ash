@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class PlayerScrapesHandler : MonoBehaviour
 {
     private int playerScrapes = 0;
-    public event Action OnScrapeChange;
+    public UnityEvent<float> OnScrapeChange;
     [SerializeField] private GameObject playerCorpse;
     void Start()
     {
@@ -15,14 +16,14 @@ public class PlayerScrapesHandler : MonoBehaviour
     {
         playerScrapes += scrapes;
         PlayerDataModel.SaveScrapesAmount(playerScrapes);
-        OnScrapeChange?.Invoke();
+        OnScrapeChange?.Invoke(playerScrapes);
     }
     public void DropAllPlayerScrapes()
     {
         //instantiate the playerCorpse and then add the scrapes to it
         playerScrapes = 0;
         PlayerDataModel.SaveScrapesAmount(playerScrapes);
-        OnScrapeChange?.Invoke();
+        OnScrapeChange?.Invoke(playerScrapes);
     }
     public bool UseScrapes(int requiredScrapes)
     {
@@ -30,7 +31,7 @@ public class PlayerScrapesHandler : MonoBehaviour
         {
             playerScrapes -= requiredScrapes;
             PlayerDataModel.SaveScrapesAmount(playerScrapes);
-            OnScrapeChange?.Invoke();
+            OnScrapeChange?.Invoke(playerScrapes);
             return true;
         }
         else

@@ -3,9 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovementHandler : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 15f;
+    [SerializeField] private float defaultMoveSpeed = 15f;
     [SerializeField] private float turnSpeed = 40f;
-    
+    private float moveSpeed;
     [SerializeField] private Camera mainCamera;
 
     private Rigidbody playerRb;
@@ -16,6 +16,7 @@ public class PlayerMovementHandler : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        moveSpeed = defaultMoveSpeed;
         playerRb = GetComponent<Rigidbody>();
         previousRotation = transform.rotation;
         if (mainCamera == null) mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -92,5 +93,13 @@ public class PlayerMovementHandler : MonoBehaviour
     public void EnablePlayerMovement()
     {
         canMove = true;
+    }
+    public void ChangeMoveSpeedTo(float newSpeed)
+    {
+               moveSpeed = newSpeed;
+    }
+    public void ResetMoveSpeed()
+    {
+        moveSpeed = defaultMoveSpeed;
     }
 }
