@@ -4,21 +4,27 @@ public class PlayerLockOnLogic : MonoBehaviour
 {
     [SerializeField] private float lockOnRange = 20f;
     [SerializeField] private LayerMask lockOnLayerMask;
+    [SerializeField] private float maxLockOnDist = 30f;
     private GameObject lockedOnTarget;
-    private PlayerMovementHandler playerMovementHandler;
+    private LockedOnRotationStrategy lockedOnRotationStrategy;
+    private PlayerRotationHandler playerRotationHandler;
     private bool isLockedOn = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        playerMovementHandler = GetComponent<PlayerMovementHandler>();
+        playerRotationHandler = GetComponent<PlayerRotationHandler>();
+    }
+    void Update()
+    {
+        CheckPlayerToTargetDist();
     }
     public void LockOn()
     {
-        if (playerMovementHandler == null) return;
+        if (playerRotationHandler == null) return;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, lockOnRange, lockOnLayerMask);
         if (!isLockedOn && lockedOnTarget == null)
         {
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, lockOnRange, lockOnLayerMask);
             float closestDistance = Mathf.Infinity;
             GameObject closestTarget = null;
             foreach (Collider collider in hitColliders)
@@ -30,34 +36,59 @@ public class PlayerLockOnLogic : MonoBehaviour
                     closestTarget = collider.gameObject;
                 }
             }
-            if (closestTarget != null)
+            if (closestTarget != null && closestTarget.activeInHierarchy)
             {
                 lockedOnTarget = closestTarget;
+                HealthHandler targetHealthHandler = lockedOnTarget.GetComponent<HealthHandler>();
+                if(targetHealthHandler != null)
+                {
+                    targetHealthHandler.OnDeath.AddListener(StopLockOn);
+                }
+                else
+                {
+                    Debug.LogError("Enemy Doesn't have HealthHandler attached!");
+                }
                 isLockedOn = true;
-                Vector3 targetDir = (lockedOnTarget.transform.position - transform.position).normalized;
-                Vector2 moveDir = new Vector2(targetDir.x, targetDir.z).normalized;
-                playerMovementHandler.HandlePlayerRotation(moveDir);
+                lockedOnRotationStrategy = new LockedOnRotationStrategy(lockedOnTarget.transform);
+                playerRotationHandler.SetRotationStrategy(lockedOnRotationStrategy);
             }
         }
         else
         {
-            if (hitColliders.Length > 0)
+            StopLockOn();
+        }
+    }
+    public void StopLockOn()
+    {
+        if(lockedOnTarget != null)
+        {
+            HealthHandler targetHealthHandler = lockedOnTarget.GetComponent<HealthHandler>();
+            if(targetHealthHandler != null)
             {
-                foreach (Collider collider in hitColliders)
-                {
-                    if (collider.gameObject != lockedOnTarget)
-                    {
-                        lockedOnTarget = collider.gameObject;
-                        isLockedOn = true;
-                        break;
-                    }
-                }
+                targetHealthHandler.OnDeath.RemoveListener(StopLockOn);
             }
             else
             {
-                lockedOnTarget = null;
-                isLockedOn = false;
+                Debug.LogError("Enemy doesn't have healthHandler script attached!");
             }
         }
+        lockedOnTarget = null;
+        isLockedOn = false;
+        playerRotationHandler.ResetRotationStrategyToDefaultFreeLook();
+    }
+    private void CheckPlayerToTargetDist()
+    {
+        if(lockedOnTarget != null)
+        {
+            float playerToTargetDist = Vector3.Distance(transform.position, lockedOnTarget.transform.position);
+            if (playerToTargetDist > maxLockOnDist || !lockedOnTarget.activeInHierarchy)
+            {
+                StopLockOn();
+            }
+        }
+    }
+    public bool GetIsLockedOn()
+    {
+        return this.isLockedOn;
     }
 }

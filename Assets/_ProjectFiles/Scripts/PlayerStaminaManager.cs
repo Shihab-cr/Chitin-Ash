@@ -31,6 +31,7 @@ public class PlayerStaminaManager : MonoBehaviour
             return true;
         }
         OnInsufficientStamina?.Invoke();
+        Debug.Log("Not enough stamina!");
         return false;
     }
     public void RegainStamina() {
