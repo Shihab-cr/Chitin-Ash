@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: black_beetle_mask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000u
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: SK_BlackOxBeetle01
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_L/MiddleLeg2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_L/MiddleLeg2_L/MiddleLeg3_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_L/MiddleLeg2_L/MiddleLeg3_L/MiddleLeg4_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_L/MiddleLeg2_L/MiddleLeg3_L/MiddleLeg4_L/MiddleLeg5_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_R/MiddleLeg2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_R/MiddleLeg2_R/MiddleLeg3_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_R/MiddleLeg2_R/MiddleLeg3_R/MiddleLeg4_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/MiddleLeg1_R/MiddleLeg2_R/MiddleLeg3_R/MiddleLeg4_R/MiddleLeg5_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_3_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_3_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Carapace_M/Feather_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_L/FrontLeg2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_L/FrontLeg2_L/FrontLeg3_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_L/FrontLeg2_L/FrontLeg3_L/FrontLeg4_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_R/FrontLeg2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_R/FrontLeg2_R/FrontLeg3_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/FrontLeg1_R/FrontLeg2_R/FrontLeg3_R/FrontLeg4_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Antenna1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Antenna1_L/Antenna2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Antenna1_L/Antenna2_L/Antenna3_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Antenna1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Antenna1_R/Antenna2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Antenna1_R/Antenna2_R/Antenna3_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Eye_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Eye_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Mandible1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Mandible1_L/Mandible2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Mandible1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Neck_M/Neck1_M/Neck2_M/Head_M/Mandible1_R/Mandible2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Root_Scale_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Abdomen1_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Abdomen1_M/Abdomen1_Scale_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Abdomen1_M/Abdomen2_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Abdomen1_M/Abdomen2_M/Abdomen2_Scale_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Abdomen1_M/Abdomen2_M/Abdomen3_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Abdomen1_M/Abdomen2_M/Abdomen3_M/Abdomen3_Scale_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_L/BackLeg2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_L/BackLeg2_L/BackLeg3_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_L/BackLeg2_L/BackLeg3_L/BackLeg4_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_L/BackLeg2_L/BackLeg3_L/BackLeg4_L/BackLeg5_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_R/BackLeg2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_R/BackLeg2_R/BackLeg3_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_R/BackLeg2_R/BackLeg3_R/BackLeg4_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/BackLeg1_R/BackLeg2_R/BackLeg3_R/BackLeg4_R/BackLeg5_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Chest_M/Chest_Scale_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Spine_M/Spine_Scale_M
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M
+    m_Weight: 1
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M/FeatherBody_1_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M/FeatherBody_1_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M/FeatherBody_2_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M/FeatherBody_2_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M/FeatherBody_3_L
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01/Root_NSK/Root_M/Thorax_M/FeatherBody_3_R
+    m_Weight: 0
+  - m_Path: SK_BlackOxBeetle01.001
+    m_Weight: 0
