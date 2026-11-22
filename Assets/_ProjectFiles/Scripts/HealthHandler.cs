@@ -10,7 +10,8 @@ public class HealthHandler : MonoBehaviour, IDamageable
     public UnityEvent OnDeath;
     public UnityEvent OnHealed;
     public UnityEvent OnResetHealth;
-    public UnityEvent<float> OnHealthChanged;
+    public UnityEvent OnMaxHealthUpgraded;
+    public UnityEvent<float,float> OnHealthChanged;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurrHealth { get => currHealth;}
     bool isDead = false;
@@ -22,11 +23,12 @@ public class HealthHandler : MonoBehaviour, IDamageable
             if (currHealth <= 0) currHealth = maxHealth;
         }
         else currHealth = maxHealth;
+        OnHealthChanged?.Invoke(currHealth, maxHealth);
     }
     public void InitializeHealth(float health)
     {
         currHealth = health > 0 ? health : maxHealth;
-        OnHealthChanged?.Invoke(currHealth);
+        OnHealthChanged?.Invoke(currHealth,maxHealth);
     }
     public void TakeDmg(float dmg)
     {
@@ -34,7 +36,7 @@ public class HealthHandler : MonoBehaviour, IDamageable
         if(!canTakeDmg) return;
 
         currHealth = Mathf.Max(currHealth-dmg,0);
-        OnHealthChanged?.Invoke(currHealth);
+        OnHealthChanged?.Invoke(currHealth,maxHealth);
 
         if (currHealth <= 0)
         {
@@ -67,6 +69,14 @@ public class HealthHandler : MonoBehaviour, IDamageable
     public void EnableTakingDamage()
     {
         canTakeDmg = true;
+    }
+    public void UpgradeMaxHealth(float newMaxHealth)
+    {
+        if (newMaxHealth < maxHealth) return;
+        this.maxHealth = newMaxHealth;
+        currHealth = newMaxHealth;
+        OnHealthChanged?.Invoke(currHealth,maxHealth);
+        OnMaxHealthUpgraded?.Invoke();
     }
 
 }

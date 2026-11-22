@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class PlayerStaminaManager : MonoBehaviour
 {
-    public UnityEvent<float> OnStaminaChanged;
+    public UnityEvent<float,float> OnStaminaChanged;
     public UnityEvent<float> OnStaminaUpgraded;
     public UnityEvent OnInsufficientStamina;
 
@@ -17,7 +17,7 @@ public class PlayerStaminaManager : MonoBehaviour
     void Start()
     {
         currentStamina = maxStamina;
-        OnStaminaChanged?.Invoke(currentStamina);
+        OnStaminaChanged?.Invoke(currentStamina,maxStamina);
     }
     private void Update()
     {
@@ -27,7 +27,7 @@ public class PlayerStaminaManager : MonoBehaviour
         if(currentStamina >= amount) {
             currentStamina -= amount;
             timeSinceLastRegain = 0f;
-            OnStaminaChanged?.Invoke(currentStamina);
+            OnStaminaChanged?.Invoke(currentStamina,maxStamina);
             return true;
         }
         OnInsufficientStamina?.Invoke();
@@ -45,7 +45,7 @@ public class PlayerStaminaManager : MonoBehaviour
         
         currentStamina += Time.deltaTime * regainSpeed;
         currentStamina = Mathf.Min(currentStamina, maxStamina);
-        OnStaminaChanged?.Invoke(currentStamina);
+        OnStaminaChanged?.Invoke(currentStamina,maxStamina);
         
     }
     public void UpgradeStamina(float amount) {
@@ -54,7 +54,7 @@ public class PlayerStaminaManager : MonoBehaviour
         currentStamina = maxStamina;
         float upgradeRatio = maxStamina / oldMaxStamina;
         OnStaminaUpgraded?.Invoke(upgradeRatio);
-        OnStaminaChanged?.Invoke(currentStamina);
+        OnStaminaChanged?.Invoke(currentStamina,maxStamina);
     }
     public void DisableStaminaRegain()
     {

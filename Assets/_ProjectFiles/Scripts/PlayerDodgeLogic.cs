@@ -64,7 +64,13 @@ public class PlayerDodgeLogic : MonoBehaviour
         // Smooth turn toward dodge direction before launching
         if (moveDir.magnitude > 0)
         {
-            yield return StartCoroutine(playerRotationHandler.RotateTowards(dodgeDirection,dodgeRotationSpeedMultiplier));
+            //yield return StartCoroutine(playerRotationHandler.RotateTowards(dodgeDirection,dodgeRotationSpeedMultiplier));
+            Vector3 flatDir = new Vector3(dodgeDirection.x, 0f, dodgeDirection.z);
+            if (flatDir.sqrMagnitude > 0.001f)
+            {
+                Quaternion.LookRotation (dodgeDirection);
+
+            }
         }
 
         // Apply dodge force after turn completes
@@ -76,9 +82,17 @@ public class PlayerDodgeLogic : MonoBehaviour
         if (healthHandler != null) healthHandler.EnableTakingDamage();
         yield return new WaitForSeconds(dodgeDuration - dodgeIframeTime);
         playerMovementHandler.EnablePlayerMovement();
-        playerRotationHandler.ResumeRotationStrategy();
+        playerRotationHandler.ResumePlayerRotation();
         yield return new WaitForSeconds(dodgeCoolDown);
         canDodge = true;
         dodgeCoolDownCoroutine = null;
+    }
+    public void DisableDodging()
+    {
+        canDodge = false;
+    }
+    public void EnableDodging()
+    {
+        canDodge = true;
     }
 }

@@ -61,7 +61,7 @@ public class PlayerRotationHandler : MonoBehaviour
         this.previousRotationStrategy = rotationStrategy;
         this.rotationStrategy = frozenLockedRotationStrategy;
     }
-    public void ResumeRotationStrategy()
+    public void ResumePlayerRotation()
     {
         this.rotationStrategy = previousRotationStrategy;
     }
