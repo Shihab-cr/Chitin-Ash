@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a0853412828dd949a67880b74d24518, type: 3}
+  m_Name: Skill_ToughShell
+  m_EditorClassIdentifier: Assembly-CSharp::SkillDefinitionSO
+  skillId: Skill_ToughShell
+  displayName: Tough Shell
+  icon: {fileID: 0}
+  description: 
+  tiers:
+  - tierName: tier 1
+    description: 
+    redAphidCost: 1
+    requiredPlayerLevel: 0
+    requiredEliteId: 
+    requiredConsumedEnemyId: 
+    requiredConsumedCount: 0
+    bonuses:
+    - stat: 0
+      amount: 20
