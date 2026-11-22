@@ -2072,6 +2072,9 @@ GameObject:
   - component: {fileID: 1854924076}
   - component: {fileID: 1854924077}
   - component: {fileID: 1854924078}
+  - component: {fileID: 1854924081}
+  - component: {fileID: 1854924080}
+  - component: {fileID: 1854924079}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2522,6 +2525,49 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   damageTransform: {fileID: 0}
+--- !u!114 &1854924079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854924063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d54f75ee7309024183c1ead643e354c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpecialAttackLogic
+  specialAttacks: []
+--- !u!114 &1854924080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854924063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64280af0bb182ac41af9456669fa993f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightAttackLogic
+  lightAttacks: []
+--- !u!114 &1854924081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854924063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aa0a5dca1940324587469e7f3062839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHeavyAttackLogic
+  heavyAttack: {fileID: 0}
+  dmgDurationMultiplier: 1.2
+  maxChargeDuration: 2
+  heavyAtkTiers: []
+  stamPerCharge: 1
 --- !u!1 &1868555118
 GameObject:
   m_ObjectHideFlags: 0
