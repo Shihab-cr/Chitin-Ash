@@ -48,7 +48,7 @@ namespace Game.Spawning  // a good practice to group all spawning classes under 
             if (entityPrefab == null) { enabled = false; return; }
 
             ResolveRefs();
-            strategy = mode == SpawnerMode.Enemy ? enemyMode : larvaeMode;
+            //strategy = mode == SpawnerMode.Enemy ? enemyMode : larvaeMode;
             strategy.Initialize();
 
             poolCapacity = strategy.GetActiveCap(maxActiveEntities);

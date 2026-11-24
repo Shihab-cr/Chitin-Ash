@@ -24,12 +24,12 @@ namespace Game.Spawning
         private void OnEnable()
         {
             EnsureInitialized();
-            if (health != null) health.OnDied += ReturnToPool;
+            //if (health != null) health.OnDied += ReturnToPool;
         }
 
         private void OnDisable()
         {
-            if (health != null) health.OnDied -= ReturnToPool;
+            //if (health != null) health.OnDied -= ReturnToPool;
         }
 
         private void EnsureInitialized()

@@ -14,7 +14,7 @@ namespace Game.Spawning
     }
 
     [Serializable]
-    public class EnemyWaveStrategy : ISpawnStrategy
+    public class EnemyWaveStrategy //: ISpawnStrategy
     {
         [SerializeField, Min(1)] private int totalWaveQuota = 10;
 
@@ -31,10 +31,10 @@ namespace Game.Spawning
         public void Subscribe(Action onReset)
         {
             onResetPool = onReset;
-            CheckpointEvents.OnCheckpointRest += HandleCheckpointRest; 
+            //CheckpointEvents.OnCheckpointRest += HandleCheckpointRest; 
         }
 
-        public void Unsubscribe() => CheckpointEvents.OnCheckpointRest -= HandleCheckpointRest; //remove the listener when disabled
+        //public void Unsubscribe() => //CheckpointEvents.OnCheckpointRest -= HandleCheckpointRest; //remove the listener when disabled
 
         private void HandleCheckpointRest()
         {
