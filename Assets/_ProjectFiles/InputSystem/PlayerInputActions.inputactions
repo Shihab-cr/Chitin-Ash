@@ -32,7 +32,7 @@
                     "id": "79b89773-e48f-491b-b538-832cb766c3a5",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false,
                     "priority": 0
                 },
@@ -425,7 +425,7 @@
                 {
                     "name": "",
                     "id": "3bb12284-0e60-4802-804c-421867264e3f",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

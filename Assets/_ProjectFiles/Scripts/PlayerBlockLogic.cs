@@ -12,8 +12,9 @@ public class PlayerBlockLogic : MonoBehaviour, IDamageable
     [SerializeField] private float blockMoveSpeed = 5f;
     private PlayerStaminaManager playerStaminaManager;
     private PlayerMovementHandler playerMovementHandler;
+    private PlayerActionCoordinator playerActionCoordinator;
     private IDamageable playerHealthHandler;
-    private bool canBlock = true;
+    //private bool canBlock = true;
     private bool isBlocking = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,37 +22,47 @@ public class PlayerBlockLogic : MonoBehaviour, IDamageable
         playerStaminaManager = GetComponent<PlayerStaminaManager>();
         playerMovementHandler = GetComponent<PlayerMovementHandler>();
         playerHealthHandler = GetComponent<HealthHandler>();
+        playerActionCoordinator = GetComponent<PlayerActionCoordinator>();
+    }
+    void Update()
+    {
+        if(isBlocking && playerActionCoordinator !=null && !playerActionCoordinator.CanPerformAction(PlayerAbility.Block))
+        {
+            StopBlocking();
+        }
     }
     public void OnBlockInput(InputAction.CallbackContext context)
     {
-        if(!canBlock) return;
+        if (context.canceled)
+        {
+            StopBlocking();
+            return;
+        }
+        //if(!canBlock) return;
+        if (playerActionCoordinator == null || !playerActionCoordinator.CanPerformAction(PlayerAbility.Block)) return;
 
         if (context.started || context.performed) StartBlocking();
-        else if (context.canceled) StopBlocking();
+        
     }
 
     public void StartBlocking()
     {
-        if(!canBlock || isBlocking) return;
+        if(!playerActionCoordinator.CanPerformAction(PlayerAbility.Block) || isBlocking) return;
         isBlocking = true;
         OnBlockStart?.Invoke();
+        playerActionCoordinator.BeginAction(PlayerActionType.Block,PlayerAbility.Block | PlayerAbility.Move | PlayerAbility.Rotate | PlayerAbility.Dodge);
         if (playerMovementHandler != null) playerMovementHandler.ChangeMoveSpeedTo(blockMoveSpeed);
     }
     public void StopBlocking()
     {
+        if (!isBlocking) return;
+
         isBlocking = false;
         OnBlockEnd?.Invoke();
+        playerActionCoordinator.EndAction(PlayerActionType.Block);
         if (playerMovementHandler != null) playerMovementHandler.ResetMoveSpeed();
     }
-    public void DisableBlocking()
-    {
-        canBlock = false;
-        StopBlocking();
-    }
-    public void EnableBlocking()
-    {
-        canBlock = true;
-    }
+   
     public void TakeDmg(float dmg)
     {
         if (!isBlocking)
@@ -67,9 +78,17 @@ public class PlayerBlockLogic : MonoBehaviour, IDamageable
         }
         else
         {
+            if (playerStaminaManager != null && playerStaminaManager.CurrentStamina > 0f)
+            {
+                playerStaminaManager.UseStamina(playerStaminaManager.CurrentStamina);
+            }
             StopBlocking();
             OnGuardBreak?.Invoke();
             playerHealthHandler.TakeDmg(dmg);
         }
+    }
+    private void OnDisable()
+    {
+        StopBlocking();
     }
 }

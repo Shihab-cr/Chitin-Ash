@@ -5,20 +5,17 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem.Interactions;
 
+
 public class PlayerAttackLogic : MonoBehaviour
 {
     [SerializeField] private LayerMask damageableLayermask;
-
     
-    private PlayerMovementHandler playerMovementHandler;
-    private PlayerRotationHandler playerRotationHandler;
     private PlayerStaminaManager playerStaminaManager;
-    private PlayerBlockLogic playerBlockLogic;
-    private PlayerDodgeLogic playerDodgeLogic;
     private IAttackStrategy currAtckStrategy;
     private PlayerLightAttackLogic playerLightAtkLogic;
     private PlayerHeavyAttackLogic playerHeavyAtkLogic;
     private PlayerSpecialAttackLogic playerSpecialAtkLogic;
+    private PlayerActionCoordinator playerActionCoordinator;
     private PlayerAttackSO currAtkSO;
     private bool canAtk= true;
     public Transform damageTransform;
@@ -26,21 +23,35 @@ public class PlayerAttackLogic : MonoBehaviour
 
     void Start()
     {
-        playerMovementHandler = GetComponent<PlayerMovementHandler>();
-        playerRotationHandler = GetComponent<PlayerRotationHandler>();
         playerStaminaManager = GetComponent<PlayerStaminaManager>();
-        playerDodgeLogic = GetComponent<PlayerDodgeLogic>();
-        playerBlockLogic = GetComponent<PlayerBlockLogic>();
+        playerActionCoordinator = GetComponent<PlayerActionCoordinator>();
 
         playerLightAtkLogic = GetComponent<PlayerLightAttackLogic>();
         playerHeavyAtkLogic = GetComponent<PlayerHeavyAttackLogic>();
         playerSpecialAtkLogic = GetComponent<PlayerSpecialAttackLogic>();
     }
-   public void OnLightAttack(InputAction.CallbackContext context)
+    private void OnDisable()
+    {
+        if (!canAtk || currAtckStrategy != null)
+        {
+            EndAtk();
+        }
+    }
+    void Update()
+    {
+        if(currAtckStrategy as Object == playerHeavyAtkLogic && playerHeavyAtkLogic != null && playerHeavyAtkLogic.IsCharging)
+        {
+            if(playerActionCoordinator != null && !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack))
+            {
+                EndAtk();
+            }
+        }
+    }
+    public void OnLightAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            if (!canAtk) return;
+            if (!canAtk || playerActionCoordinator == null || !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack)) return;
             SetAttackStrategy(playerLightAtkLogic);
             if (!currAtckStrategy.CanPerformAttack()) return;
             ExecuteAttackLogic();
@@ -49,9 +60,11 @@ public class PlayerAttackLogic : MonoBehaviour
     }
     public void OnHeavyAttack(InputAction.CallbackContext context)
     {
+        if (playerHeavyAtkLogic == null) return;
+
         if (context.performed)
         {
-            if (!canAtk || !playerHeavyAtkLogic.CanPerformAttack()) return;
+            if (!canAtk || playerActionCoordinator == null || !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack) || !playerHeavyAtkLogic.CanPerformAttack()) return;
             SetAttackStrategy(playerHeavyAtkLogic);
             playerHeavyAtkLogic.ChargeHeavyAtk(context);
             LockPlayerActions();
@@ -59,6 +72,11 @@ public class PlayerAttackLogic : MonoBehaviour
         else if (context.canceled)
         {
             if (!playerHeavyAtkLogic.IsCharging) return;
+            if(playerActionCoordinator == null || !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack))
+            {
+                EndAtk();
+                return;
+            }
             playerHeavyAtkLogic.ChargeHeavyAtk(context);
             ExecuteAttackLogic();
         }
@@ -88,7 +106,7 @@ public class PlayerAttackLogic : MonoBehaviour
     {
         if (context.performed)
         {
-            if (!canAtk) return;
+            if (!canAtk || playerActionCoordinator ==null || !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack)) return;
             playerSpecialAtkLogic.ChooseSpecialAtk(index);
             SetAttackStrategy(playerSpecialAtkLogic);
             if (!currAtckStrategy.CanPerformAttack()) return;
@@ -128,11 +146,8 @@ public class PlayerAttackLogic : MonoBehaviour
     private void LockPlayerActions()
     {
         canAtk = false;
-        if (playerMovementHandler != null) playerMovementHandler.DisablePlayerMovement();
-        if (playerRotationHandler != null) playerRotationHandler.StopPlayerRotation();
+        if (playerActionCoordinator != null) playerActionCoordinator.BeginAction(PlayerActionType.Attack, PlayerAbility.Attack);
         
-        if (playerDodgeLogic != null) playerDodgeLogic.DisableDodging();
-        if (playerBlockLogic != null) playerBlockLogic.DisableBlocking();
     }
     //Called to stop the player from movement can be delegated to the animation clip
     public void StartAtk()
@@ -146,10 +161,8 @@ public class PlayerAttackLogic : MonoBehaviour
     public void EndAtk()
     {
         canAtk = true;
-        if (playerMovementHandler != null) playerMovementHandler.EnablePlayerMovement();
-        if (playerRotationHandler != null) playerRotationHandler.ResumePlayerRotation();
-        if (playerDodgeLogic != null) playerDodgeLogic.EnableDodging();
-        if (playerBlockLogic != null) playerBlockLogic.EnableBlocking();
+        if (playerActionCoordinator != null) playerActionCoordinator.EndAction(PlayerActionType.Attack);
+
         currAtckStrategy?.OnEndAtk();
         currAtckStrategy = null;
     }

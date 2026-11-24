@@ -6,6 +6,7 @@ public class PlayerDodgeLogic : MonoBehaviour
     private Rigidbody playerRb;
     private PlayerMovementHandler playerMovementHandler;
     private PlayerRotationHandler playerRotationHandler;
+    private PlayerActionCoordinator playerActionCoordinator;
     private PlayerStaminaManager playerStaminaManager;
     private PlayerLockOnLogic playerLockOnLogic;
     private HealthHandler healthHandler;
@@ -29,13 +30,16 @@ public class PlayerDodgeLogic : MonoBehaviour
         playerLockOnLogic = GetComponent<PlayerLockOnLogic>();
         mainCamera = Camera.main;
         playerMovementHandler = GetComponent<PlayerMovementHandler>();
+        playerActionCoordinator = GetComponent<PlayerActionCoordinator>();
     }
     public void Dodge()
     {
-        if (playerMovementHandler == null || playerRotationHandler == null) return;
-        if (!canDodge) return;
+        if (playerMovementHandler == null || playerRotationHandler == null || playerActionCoordinator == null) return;
+        if (!canDodge ||!playerActionCoordinator.CanPerformAction(PlayerAbility.Dodge)) return;
         if(playerStaminaManager == null || !playerStaminaManager.UseStamina(staminaCost)) return;
         
+        
+
         Vector2 moveDir = playerMovementHandler.GetMoveDirection();
         Vector3 dodgeDirection;
         if(moveDir.magnitude == 0)
@@ -58,9 +62,9 @@ public class PlayerDodgeLogic : MonoBehaviour
     private IEnumerator DodgeCoolDown(Vector3 dodgeDirection, Vector2 moveDir)
     {
         canDodge = false;
-        playerMovementHandler.DisablePlayerMovement();
-        playerRotationHandler.StopPlayerRotation();
-
+        //playerMovementHandler.DisablePlayerMovement();
+        //playerRotationHandler.StopPlayerRotation();
+        playerActionCoordinator.BeginAction(PlayerActionType.Dodge, PlayerAbility.None);
         // Smooth turn toward dodge direction before launching
         if (moveDir.magnitude > 0)
         {
@@ -68,8 +72,9 @@ public class PlayerDodgeLogic : MonoBehaviour
             Vector3 flatDir = new Vector3(dodgeDirection.x, 0f, dodgeDirection.z);
             if (flatDir.sqrMagnitude > 0.001f)
             {
-                Quaternion.LookRotation (dodgeDirection);
-
+                Quaternion targetRot = Quaternion.LookRotation(flatDir);
+                transform.rotation = targetRot;
+                playerRb.rotation = targetRot;
             }
         }
 
@@ -80,19 +85,24 @@ public class PlayerDodgeLogic : MonoBehaviour
         if (healthHandler != null) healthHandler.DisableTakingDamage();
         yield return new WaitForSeconds(dodgeIframeTime);
         if (healthHandler != null) healthHandler.EnableTakingDamage();
-        yield return new WaitForSeconds(dodgeDuration - dodgeIframeTime);
-        playerMovementHandler.EnablePlayerMovement();
-        playerRotationHandler.ResumePlayerRotation();
+        yield return new WaitForSeconds(Mathf.Max(0f,dodgeDuration - dodgeIframeTime));
+        //playerMovementHandler.EnablePlayerMovement();
+        //playerRotationHandler.ResumePlayerRotation();
+        playerActionCoordinator.EndAction(PlayerActionType.Dodge);
         yield return new WaitForSeconds(dodgeCoolDown);
         canDodge = true;
         dodgeCoolDownCoroutine = null;
     }
-    public void DisableDodging()
+    
+    private void OnDisable()
     {
-        canDodge = false;
-    }
-    public void EnableDodging()
-    {
+        if (dodgeCoolDownCoroutine != null)
+        {
+            StopCoroutine(dodgeCoolDownCoroutine);
+            dodgeCoolDownCoroutine = null;
+        }
         canDodge = true;
+        if (healthHandler != null) healthHandler.EnableTakingDamage();
+        if (playerActionCoordinator != null) playerActionCoordinator.EndAction(PlayerActionType.Dodge);
     }
 }

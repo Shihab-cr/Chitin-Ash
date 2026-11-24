@@ -10,6 +10,7 @@ public class PlayerRotationHandler : MonoBehaviour
     private IRotationStrategy previousRotationStrategy;
     private FreeLockRotationStrategy freeLockRotationStrategy;
     private FrozenLockedRotationStrategy frozenLockedRotationStrategy;
+    private PlayerActionCoordinator playerActionCoordinator;
     private RotationContext rotationContext;
     [SerializeField] private Camera mainCamera;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,6 +23,7 @@ public class PlayerRotationHandler : MonoBehaviour
         frozenLockedRotationStrategy = new FrozenLockedRotationStrategy();
         previousRotationStrategy = freeLockRotationStrategy;
         rotationStrategy = freeLockRotationStrategy; // Default strategy
+        playerActionCoordinator = GetComponent<PlayerActionCoordinator>();
     }
 
     // Update is called once per frame
@@ -32,6 +34,10 @@ public class PlayerRotationHandler : MonoBehaviour
     
     private void ExecuteRotationStrategy()
     {
+        if (!playerActionCoordinator.CanPerformAction(PlayerAbility.Rotate))
+        {
+            return;
+        }
         rotationContext.moveInput = moveInputReference.action.ReadValue<Vector2>();
         rotationContext.playerTransform = transform;
         rotationContext.cameraTransform = mainCamera.transform;
@@ -55,16 +61,7 @@ public class PlayerRotationHandler : MonoBehaviour
         else
             rotationStrategy = freeLockRotationStrategy;
     }
-    public void StopPlayerRotation()
-    {
-        if (rotationStrategy == frozenLockedRotationStrategy) return;
-        this.previousRotationStrategy = rotationStrategy;
-        this.rotationStrategy = frozenLockedRotationStrategy;
-    }
-    public void ResumePlayerRotation()
-    {
-        this.rotationStrategy = previousRotationStrategy;
-    }
+    
 
     public IEnumerator RotateTowards(Vector3 direction,float rotationMultiplier)
     {

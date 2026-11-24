@@ -11,6 +11,7 @@ public class PlayerStaminaManager : MonoBehaviour
     [SerializeField] private float regainSpeed = 45f;
     [SerializeField] private float regainDelay = 0.5f;
     private float currentStamina;
+    public float CurrentStamina => currentStamina;
     private bool canRegainStamina = true;
     private float timeSinceLastRegain = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
