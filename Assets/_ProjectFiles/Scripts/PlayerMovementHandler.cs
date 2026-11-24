@@ -3,28 +3,28 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovementHandler : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 15f;
-    [SerializeField] private float turnSpeed = 40f;
-    
+    [SerializeField] private float defaultMoveSpeed = 15f;
+    //[SerializeField] private float turnSpeed = 40f;
+    private float moveSpeed;
+    public float MoveSpeed => moveSpeed;
+    public float DefaultMoveSpeed => defaultMoveSpeed;
     [SerializeField] private Camera mainCamera;
-
+    private PlayerActionCoordinator playerActionCoordinator;
     private Rigidbody playerRb;
-    private bool canMove = true;
-    private Quaternion previousRotation;
+    //private bool canMove = true;
+    //private Quaternion previousRotation;
     private Vector2 moveDir = Vector2.zero;
     [SerializeField] private InputActionReference moveRef;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        moveSpeed = defaultMoveSpeed;
         playerRb = GetComponent<Rigidbody>();
-        previousRotation = transform.rotation;
+        playerActionCoordinator = GetComponent<PlayerActionCoordinator>();
+        //previousRotation = transform.rotation;
         if (mainCamera == null) mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
-    private void Update()
-    {
-        Vector2 lookAtDir = moveRef.action.ReadValue<Vector2>();
-        HandlePlayerRotation(lookAtDir);
-    }
+    
     private void FixedUpdate()
     {
         moveDir = moveRef.action.ReadValue<Vector2>();
@@ -32,21 +32,49 @@ public class PlayerMovementHandler : MonoBehaviour
     }
     public void HandlePlayerMovement(Vector2 moveDir)
     {
-        if (!canMove) return;
+        //if (!canMove) return;
+        if (!playerActionCoordinator.CanPerformAction(PlayerAbility.Move)) return;
         Vector3 cameraForward = mainCamera.transform.forward;
         Vector3 cameraRight = mainCamera.transform.right;
         cameraForward.y = 0;
         cameraRight.y = 0;
         Vector3 moveProjection = moveDir.y * cameraForward.normalized +moveDir.x * cameraRight.normalized;
+        if (moveProjection.magnitude > 1f) moveProjection.Normalize();
         Vector3 movementVector = moveProjection*moveSpeed*Time.fixedDeltaTime;
-        if (playerRb != null) playerRb.MovePosition(transform.position + movementVector);
+        if (playerRb != null) playerRb.MovePosition(playerRb.position + movementVector);
         if(movementVector == Vector3.zero)
         {
             playerRb.linearVelocity = new Vector3(0f, playerRb.linearVelocity.y, 0f);
             playerRb.angularVelocity = Vector3.zero;
         }
     }
-    public void HandlePlayerRotation(Vector2 moveDir)
+   
+    public Vector2 GetMoveDirection()
+    {
+        return moveDir;
+    }
+    
+    
+    public void ChangeMoveSpeedTo(float newSpeed)
+    {
+               moveSpeed = newSpeed;
+    }
+    public void ResetMoveSpeed()
+    {
+        moveSpeed = defaultMoveSpeed;
+    }
+}
+
+
+/*
+ private void Update()
+    {
+        Vector2 lookAtDir = moveRef.action.ReadValue<Vector2>();
+        HandlePlayerRotation(lookAtDir);
+    }
+
+
+ public void HandlePlayerRotation(Vector2 moveDir)
     {
         if (!canMove) return;
         
@@ -57,13 +85,13 @@ public class PlayerMovementHandler : MonoBehaviour
         cameraForward.y = 0;
         cameraRight.y = 0;
         Vector3 relativeDirection = moveDir.y * cameraForward.normalized + moveDir.x * cameraRight.normalized;
-        /*
+        
        
         //I left this code for understanding the rotation or when studying this code later on
 
-        Vector3 targetPos = transform.position+relativeDirection*moveSpeed* Time.deltaTime;
-        Vector3 targetDirection = targetPos - currentPos;
-        */
+        //Vector3 targetPos = transform.position+relativeDirection*moveSpeed* Time.deltaTime;
+        //Vector3 targetDirection = targetPos - currentPos;
+        
         Quaternion targetRotation = previousRotation;
         Quaternion currRotation = transform.localRotation;
         if (moveDir.magnitude != 0)
@@ -80,17 +108,5 @@ public class PlayerMovementHandler : MonoBehaviour
         
         
     }
-    public Vector2 GetMoveDirection()
-    {
-        return moveDir;
-    }
-    
-    public void DisablePlayerMovement()
-    {
-        canMove = false;
-    }
-    public void EnablePlayerMovement()
-    {
-        canMove = true;
-    }
-}
+
+ */

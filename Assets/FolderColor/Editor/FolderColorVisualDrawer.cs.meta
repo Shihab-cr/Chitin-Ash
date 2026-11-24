@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: df08561dd9210a84f8c0344dbc846224
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 291337
+  packageName: FolderColor
+  packageVersion: 3.1
+  assetPath: Assets/FolderColor/Editor/FolderColorVisualDrawer.cs
+  uploadId: 1035230

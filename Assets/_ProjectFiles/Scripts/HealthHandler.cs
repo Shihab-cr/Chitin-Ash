@@ -1,15 +1,17 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class HealthHandler : MonoBehaviour
+public class HealthHandler : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100f;
     private float currHealth;
-    public event Action OnHit;
-    public event Action OnDeath;
-    public event Action OnHealed;
-    public event Action OnResetHealth;
-    public event Action<float> OnHealthChanged;
+    public UnityEvent OnHit;
+    public UnityEvent OnDeath;
+    public UnityEvent OnHealed;
+    public UnityEvent OnResetHealth;
+    public UnityEvent OnMaxHealthUpgraded;
+    public UnityEvent<float,float> OnHealthChanged;
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public float CurrHealth { get => currHealth;}
     bool isDead = false;
@@ -21,11 +23,12 @@ public class HealthHandler : MonoBehaviour
             if (currHealth <= 0) currHealth = maxHealth;
         }
         else currHealth = maxHealth;
+        OnHealthChanged?.Invoke(currHealth, maxHealth);
     }
     public void InitializeHealth(float health)
     {
         currHealth = health > 0 ? health : maxHealth;
-        OnHealthChanged?.Invoke(currHealth);
+        OnHealthChanged?.Invoke(currHealth,maxHealth);
     }
     public void TakeDmg(float dmg)
     {
@@ -33,7 +36,7 @@ public class HealthHandler : MonoBehaviour
         if(!canTakeDmg) return;
 
         currHealth = Mathf.Max(currHealth-dmg,0);
-        OnHealthChanged?.Invoke(currHealth);
+        OnHealthChanged?.Invoke(currHealth,maxHealth);
 
         if (currHealth <= 0)
         {
@@ -66,6 +69,14 @@ public class HealthHandler : MonoBehaviour
     public void EnableTakingDamage()
     {
         canTakeDmg = true;
+    }
+    public void UpgradeMaxHealth(float newMaxHealth)
+    {
+        if (newMaxHealth < maxHealth) return;
+        this.maxHealth = newMaxHealth;
+        currHealth = newMaxHealth;
+        OnHealthChanged?.Invoke(currHealth,maxHealth);
+        OnMaxHealthUpgraded?.Invoke();
     }
 
 }

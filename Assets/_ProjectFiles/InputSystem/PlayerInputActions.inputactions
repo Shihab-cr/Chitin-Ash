@@ -32,7 +32,7 @@
                     "id": "79b89773-e48f-491b-b538-832cb766c3a5",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap",
                     "initialStateCheck": false,
                     "priority": 0
                 },
@@ -92,7 +92,7 @@
                     "id": "99161cb6-9446-4394-aa1b-cfd9a5881efd",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Tap",
+                    "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
                 },
@@ -102,7 +102,7 @@
                     "id": "35243fb6-0fe9-4d77-a86e-5c6ade40b486",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
                 },
@@ -313,15 +313,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "1e0eed56-0f48-4d46-8648-c168e60b459c",
+                    "name": "One Modifier",
+                    "id": "4d99a0a8-46ce-4da6-8765-a0a3d7c8b7b6",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Heavy Attack",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "4d501db0-5322-4615-ab97-2c892925decd",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Heavy Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "a2cbc6e3-203d-4b19-bf88-551b0fd9f478",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Heavy Attack",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "One Modifier",
@@ -403,7 +425,7 @@
                 {
                     "name": "",
                     "id": "3bb12284-0e60-4802-804c-421867264e3f",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
