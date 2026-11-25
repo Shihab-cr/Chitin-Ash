@@ -31,12 +31,12 @@ namespace Game.Spawning
         public void Subscribe(Action onReset)
         {
             onResetPool = onReset;
-            CheckpointEvents.OnCheckpointRest += HandleCheckpointRest; 
+            ProgressionEvents.OnCheckpointRested += HandleCheckpointRest;
         }
 
-        public void Unsubscribe() => CheckpointEvents.OnCheckpointRest -= HandleCheckpointRest; //remove the listener when disabled
+        public void Unsubscribe() => ProgressionEvents.OnCheckpointRested -= HandleCheckpointRest; //remove the listener when disabled
 
-        private void HandleCheckpointRest()
+        private void HandleCheckpointRest(string _)
         {
             remainingQuota = totalWaveQuota;
             onResetPool?.Invoke(); //return all active enemies to the pool
