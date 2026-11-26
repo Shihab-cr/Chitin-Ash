@@ -26,7 +26,17 @@ namespace EJETAGame
         private void OnEnable()
         {
             isEaten = false;
-            gameObject.layer = LayerMask.NameToLayer("Damageable");
+
+            int interactableLayer = LayerMask.NameToLayer("Interactable");
+            if (interactableLayer != -1)
+            {
+                gameObject.layer = interactableLayer;
+            }
+            else
+            {
+                Debug.LogError($"[{nameof(EatInteractionLogic)}] Layer 'Interactable' does not exist in Tags & Layers!", this);
+            }
+
             if (eatInteractionVisual != null) eatInteractionVisual.ResetMaterial();
         }
         void Start()
@@ -69,8 +79,14 @@ namespace EJETAGame
 
         public void OnInteractEnter()
         {
-            string keyBinding = interactionAction.action.GetBindingDisplayString();
-            InteractionText.instance.SetText($"[{keyBinding}] {displayMessage}");
+            string keyBinding = (interactionAction != null && interactionAction.action != null)
+                ? interactionAction.action.GetBindingDisplayString()
+                : "E";
+
+            if (InteractionText.instance != null)
+            {
+                InteractionText.instance.SetText($"[{keyBinding}] {displayMessage}");
+            }
         }
 
         public void OnInteractExit()

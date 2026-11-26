@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class PlayerScrapesHandler : MonoBehaviour
 {
     private int playerScrapes = 0;
-    public UnityEvent<float> OnScrapeChange;
+    public UnityEvent<int> OnScrapeChange;
     [SerializeField] private GameObject playerCorpse;
     void Start()
     {

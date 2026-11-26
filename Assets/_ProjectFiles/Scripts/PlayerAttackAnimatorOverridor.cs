@@ -3,18 +3,46 @@ using UnityEngine;
 public class PlayerAttackAnimatorOverridor : MonoBehaviour
 {
     [SerializeField] private Animator playerAnimator;
+    [SerializeField] private string attackStateName = "Attack";
+    [SerializeField] private string placeholderClipName = "Placeholder_Attack";
+    [SerializeField] private float crossFadeDuration = 0.05f;
+
     private AnimatorOverrideController animatorOverrideController;
-    private static readonly int attackStateHash = Animator.StringToHash("Attack"); //Attack is name of the state in the animator
-    
-    void Awake()
+    private int attackStateHash;
+
+    private void Awake()
     {
-        animatorOverrideController = new AnimatorOverrideController(playerAnimator.runtimeAnimatorController);
-        playerAnimator.runtimeAnimatorController = animatorOverrideController;
+        if (playerAnimator == null)
+            playerAnimator = GetComponentInChildren<Animator>();
+
+        if (playerAnimator == null)
+        {
+            Debug.LogError($"[{nameof(PlayerAttackAnimatorOverridor)}] No Animator found on {name} or its children.", this);
+            enabled = false;
+            return;
+        }
+
+        attackStateHash = Animator.StringToHash(attackStateName);
+
+        if (playerAnimator.runtimeAnimatorController is AnimatorOverrideController existingOverride)
+        {
+            animatorOverrideController = existingOverride;
+        }
+        else
+        {
+            animatorOverrideController = new AnimatorOverrideController(playerAnimator.runtimeAnimatorController);
+            playerAnimator.runtimeAnimatorController = animatorOverrideController;
+        }
     }
+
     public void OverrideAttackAnimation(AnimationClip attackAnimation)
     {
-        //Placeholder_Attack is the name of the fake animationclip to be replaced
-        animatorOverrideController["Placeholder_Attack"] = attackAnimation;
-        playerAnimator.CrossFade(attackStateHash,0.05f, 0, 0);
+        if (animatorOverrideController == null || attackAnimation == null) return;
+
+        animatorOverrideController[placeholderClipName] = attackAnimation;
+
+        // Force the Animator to bind the newly swapped clip before restarting the state
+        playerAnimator.Update(0f);
+        playerAnimator.CrossFadeInFixedTime(attackStateHash, crossFadeDuration, 0, 0f);
     }
 }

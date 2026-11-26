@@ -16,7 +16,10 @@ namespace EJETAGame
         {
             if (context.performed)
             {
-                if (currInteractable as Object == null) return;
+                if (currInteractable as Object == null) {
+                    Debug.Log("Nothing to interact with");
+                    return;
+                }
                 else
                 {
                     currInteractable.Interact();
@@ -25,38 +28,31 @@ namespace EJETAGame
         }
         void Update()
         {
-            Collider[] interactables = Physics.OverlapSphere(interactionSource.position, interactionRange, interactionLayer);
+            Vector3 origin = interactionSource != null ? interactionSource.position : transform.position;
+            Collider[] interactables = Physics.OverlapSphere(origin, interactionRange, interactionLayer, QueryTriggerInteraction.Collide);
+
             float closestDist = Mathf.Infinity;
-            GameObject detectedObject = null;
             IInteractable closestInteractable = null;
-            foreach(Collider interactable in interactables)
+
+            foreach (Collider col in interactables)
             {
-                float dist = Vector3.Distance(interactionSource.position, interactable.gameObject.transform.position);
+                IInteractable detectInteractable = col.GetComponentInParent<IInteractable>();
+                if (detectInteractable == null) continue;
+
+                float dist = Vector3.Distance(origin, col.ClosestPoint(origin));
                 if (dist < closestDist)
                 {
-                    detectedObject = interactable.gameObject;
-                    if (detectedObject != null && detectedObject.TryGetComponent(out IInteractable detectInteractable))
-                    {
-                        closestDist = dist;
-                        if (detectInteractable != closestInteractable)
-                        {
-                            closestInteractable = detectInteractable;
-
-                        }
-                    }
-                    else
-                    {
-                        detectedObject = null;
-                    }
-                    
-
+                    closestDist = dist;
+                    closestInteractable = detectInteractable;
                 }
-                
             }
+
             if (closestInteractable == null)
             {
-                InteractionText.instance.textAppear.gameObject.SetActive(false);
-                if(currInteractable as Object!= null)
+                if (InteractionText.instance != null)
+                    InteractionText.instance.textAppear.gameObject.SetActive(false);
+
+                if (currInteractable as Object != null)
                 {
                     currInteractable.OnInteractExit();
                     currInteractable = null;
@@ -64,16 +60,16 @@ namespace EJETAGame
             }
             else
             {
-                if(currInteractable != closestInteractable)
+                if (currInteractable != closestInteractable)
                 {
                     if (currInteractable as Object != null) currInteractable.OnInteractExit();
                     currInteractable = closestInteractable;
                     currInteractable.OnInteractEnter();
                 }
-                InteractionText.instance.textAppear.gameObject.SetActive(true);
-                
+
+                if (InteractionText.instance != null)
+                    InteractionText.instance.textAppear.gameObject.SetActive(true);
             }
-            
         }
     }
 

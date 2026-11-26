@@ -1,18 +1,45 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimationEventRelay : MonoBehaviour
 {
-    public event Action OnAnimationStart;
-    public event Action OnAnimationEnd;
-
-    public void StartAnimationEvent()
+    public UnityEvent OnDoDamageEvent;
+    public UnityEvent OnEndAttack;
+    public UnityEvent OnParryEvent;
+    public UnityEvent OnEndParry;
+    public UnityEvent OnEndEating;
+    public UnityEvent OnEndStun;
+    public UnityEvent OnEndAnimation;
+    public void EndAnimation()
     {
-        OnAnimationStart?.Invoke();
+        OnEndAnimation?.Invoke();
+    }
+   
+    public void EndAttack()
+    {
+        OnEndAttack?.Invoke();
     }
 
-    public void EndAnimationEvent()
+   
+    public void DoDamageEvent()
     {
-        OnAnimationEnd?.Invoke();
+        OnDoDamageEvent?.Invoke();
+    }
+    public void EndParry()
+    {
+        OnEndParry?.Invoke();
+    }
+    public void DoParryEvent()
+    {
+        OnParryEvent?.Invoke();
+    }
+    public void EndEating()
+    {
+        OnEndEating?.Invoke();
+    }
+    public void EndStun()
+    {
+        OnEndStun?.Invoke();
     }
 }

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889230846f0177f4a9a83bea83f439ea, type: 3}
   m_Name: HeavyAttackSO
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackSO
-  dmg: 0
-  staminaCost: 0
-  attackAnimation: {fileID: 0}
-  damageRadius: 0
-  coolDownDuration: 0
+  dmg: 40
+  staminaCost: 45
+  attackAnimation: {fileID: 7400000, guid: 8c6f9d077b7764448b82a6ebc31a6bec, type: 2}
+  damageRadius: 2
+  coolDownDuration: 0.2
   attackVFX: {fileID: 0}
   attackSFX: {fileID: 0}

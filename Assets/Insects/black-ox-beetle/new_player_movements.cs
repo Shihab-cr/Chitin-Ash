@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class new_player_movements : MonoBehaviour
 {
     [SerializeField] private PlayerAnimatorControllerHandler animHandler;
-
+    private bool isSprinting = false;
     private void Awake()
     {
         if (animHandler == null)
@@ -24,7 +24,7 @@ public class new_player_movements : MonoBehaviour
 
     private void HandleActions(Keyboard keyboard)
     {
-        if (keyboard.tKey.wasPressedThisFrame)
+        /*if (keyboard.tKey.wasPressedThisFrame)
         {
             animHandler.TriggerStun();
         }
@@ -51,12 +51,12 @@ public class new_player_movements : MonoBehaviour
         else if (keyboard.hKey.wasPressedThisFrame)
         {
             animHandler.SetEat(true);
-        }
+        }*/
     }
 
     private void HandleBlockAndParry(Keyboard keyboard)
     {
-        if (keyboard.jKey.wasPressedThisFrame)
+        /*if (keyboard.jKey.wasPressedThisFrame)
         {
             animHandler.TriggerBlockDamage();
         }
@@ -67,12 +67,12 @@ public class new_player_movements : MonoBehaviour
         }
 
         bool isCtrlHeld = keyboard.leftCtrlKey.isPressed || keyboard.rightCtrlKey.isPressed;
-        animHandler.SetBlocking(isCtrlHeld);
+        animHandler.SetBlocking(isCtrlHeld);*/
     }
 
     private void HandleMovement(Keyboard keyboard)
     {
-        bool isShift = keyboard.leftShiftKey.isPressed;
+        
 
         bool a = keyboard.aKey.isPressed;
         bool d = keyboard.dKey.isPressed;
@@ -81,16 +81,20 @@ public class new_player_movements : MonoBehaviour
 
         float finalH = 0f;
         if (a && !d)
-            finalH = isShift ? -2f : -1f;
+            finalH = isSprinting ? -2f : -1f;
         else if (d && !a)
-            finalH = isShift ? 1f : 2f;
+            finalH = isSprinting ? 1f : 2f;
 
         float finalV = 0f;
         if (s && !w)
-            finalV = isShift ? -2f : -1f;
+            finalV = isSprinting ? -2f : -1f;
         else if (w && !s)
-            finalV = isShift ? 1f : 2f;
+            finalV = isSprinting ? 1f : 2f;
 
         animHandler.SetMovement(finalH, finalV);
+    }
+    public void SetIsSprinting(bool sprintingStatus)
+    {
+        isSprinting = sprintingStatus;
     }
 }

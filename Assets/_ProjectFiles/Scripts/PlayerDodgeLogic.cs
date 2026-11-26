@@ -9,9 +9,11 @@ public class PlayerDodgeLogic : MonoBehaviour
     private PlayerActionCoordinator playerActionCoordinator;
     private PlayerStaminaManager playerStaminaManager;
     private PlayerLockOnLogic playerLockOnLogic;
+    [SerializeField] private PlayerAnimatorControllerHandler playerAnimatorControllerHandler;
     private HealthHandler healthHandler;
     private Camera mainCamera;
     [SerializeField] private float dodgeForce = 10f;
+    [SerializeField] private float dodgeAnimationSpeed = 2f;
     [SerializeField] private float dodgeCoolDown = 0.5f;
     [SerializeField] private float dodgeDuration = 0.35f;
     [SerializeField] private float dodgeIframeTime = 0.2f;
@@ -80,6 +82,8 @@ public class PlayerDodgeLogic : MonoBehaviour
 
         // Apply dodge force after turn completes
         playerRb.linearVelocity = new Vector3(0f, playerRb.linearVelocity.y, 0f);
+        if (playerAnimatorControllerHandler != null)
+            playerAnimatorControllerHandler.SetFastSpeed(dodgeAnimationSpeed);
         playerRb.AddForce(dodgeDirection * dodgeForce, ForceMode.Impulse);
 
         if (healthHandler != null) healthHandler.DisableTakingDamage();
@@ -89,6 +93,13 @@ public class PlayerDodgeLogic : MonoBehaviour
         //playerMovementHandler.EnablePlayerMovement();
         //playerRotationHandler.ResumePlayerRotation();
         playerActionCoordinator.EndAction(PlayerActionType.Dodge);
+        if (playerAnimatorControllerHandler != null)
+            playerAnimatorControllerHandler.ResetNormalSpeed();
+        if(playerRb != null)
+        {
+            playerRb.linearVelocity = playerRb.linearVelocity.y * Vector3.up;
+            playerRb.angularVelocity = Vector3.zero;
+        }
         yield return new WaitForSeconds(dodgeCoolDown);
         canDodge = true;
         dodgeCoolDownCoroutine = null;

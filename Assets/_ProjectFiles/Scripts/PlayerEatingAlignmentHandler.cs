@@ -6,6 +6,7 @@ public class PlayerEatingAlignmentHandler : MonoBehaviour
 {
     [SerializeField] private float alignmentDuration = 2f;
     [SerializeField] private bool preserveGroundY = true;
+    [SerializeField] private PlayerAnimatorControllerHandler playerAnimatorController;
     private Transform alignmentPosition;
     public UnityEvent OnPlayerEating;
     private PlayerActionCoordinator playerActionCoordinator;
@@ -76,6 +77,11 @@ public class PlayerEatingAlignmentHandler : MonoBehaviour
             : startRot;
 
         float elapsed = 0f;
+        float motionSped = this.alignmentDuration < 1 ? 1/this.alignmentDuration : 1;
+        if (playerAnimatorController != null)
+        {
+            playerAnimatorController.SetFastSpeed(motionSped);
+        }
         while (elapsed < alignmentDuration)
         {
             elapsed += Time.deltaTime;
@@ -83,7 +89,10 @@ public class PlayerEatingAlignmentHandler : MonoBehaviour
 
             Vector3 nextPos = Vector3.Lerp(startPos, targetPos, t);
             Quaternion nextRot = Quaternion.Slerp(startRot, targetRot, t);
-
+            if(playerAnimatorController != null)
+            {
+                playerAnimatorController.SetMovement(nextPos.normalized.x, nextPos.normalized.z);
+            }
             transform.position = nextPos;
             transform.rotation = nextRot;
             if (playerRb != null)
@@ -94,7 +103,7 @@ public class PlayerEatingAlignmentHandler : MonoBehaviour
 
             yield return null;
         }
-
+        if (playerAnimatorController != null) playerAnimatorController.ResetNormalSpeed();
         transform.position = targetPos;
         transform.rotation = targetRot;
         if (playerRb != null)

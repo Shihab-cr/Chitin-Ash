@@ -66,47 +66,4 @@ public class PlayerMovementHandler : MonoBehaviour
 }
 
 
-/*
- private void Update()
-    {
-        Vector2 lookAtDir = moveRef.action.ReadValue<Vector2>();
-        HandlePlayerRotation(lookAtDir);
-    }
 
-
- public void HandlePlayerRotation(Vector2 moveDir)
-    {
-        if (!canMove) return;
-        
-        Vector3 currentPos = transform.position;
-        
-        Vector3 cameraForward = mainCamera.transform.forward;
-        Vector3 cameraRight = mainCamera.transform.right;
-        cameraForward.y = 0;
-        cameraRight.y = 0;
-        Vector3 relativeDirection = moveDir.y * cameraForward.normalized + moveDir.x * cameraRight.normalized;
-        
-       
-        //I left this code for understanding the rotation or when studying this code later on
-
-        //Vector3 targetPos = transform.position+relativeDirection*moveSpeed* Time.deltaTime;
-        //Vector3 targetDirection = targetPos - currentPos;
-        
-        Quaternion targetRotation = previousRotation;
-        Quaternion currRotation = transform.localRotation;
-        if (moveDir.magnitude != 0)
-        {
-            if (previousRotation != currRotation)
-            {
-                previousRotation = currRotation;
-            }
-            //targetRotation = Quaternion.LookRotation(targetDirection);
-            targetRotation = Quaternion.LookRotation(relativeDirection);
-        }
-
-        transform.localRotation = Quaternion.Slerp(currRotation, targetRotation, turnSpeed*Time.deltaTime);
-        
-        
-    }
-
- */

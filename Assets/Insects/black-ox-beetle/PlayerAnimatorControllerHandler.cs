@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerAnimatorControllerHandler : MonoBehaviour
 {
+
     [SerializeField] private Animator animator;
     [SerializeField] private float movementDampTime = 0.15f;
 
@@ -10,7 +11,8 @@ public class PlayerAnimatorControllerHandler : MonoBehaviour
     [SerializeField] private float weightIncreaseSpeed = 5f;
     [SerializeField] private float weightDecreaseSpeed = 5f;
     [SerializeField] private float blockDamageDropSpeed = 25f;
-
+    [Header("Force Exit Settings")]
+    [SerializeField] private string idleStateName = "idle";
     private static readonly int EatHash = Animator.StringToHash("eat");
     private static readonly int SleepHash = Animator.StringToHash("sleep");
     private static readonly int IdleHash = Animator.StringToHash("idle");
@@ -45,7 +47,14 @@ public class PlayerAnimatorControllerHandler : MonoBehaviour
     private void Awake()
     {
         if (animator == null)
-            animator = GetComponent<Animator>();
+            animator = GetComponentInChildren<Animator>();
+
+        if (animator == null)
+        {
+            Debug.LogError($"[{nameof(PlayerAnimatorControllerHandler)}] No Animator found on {name} or its children.", this);
+            enabled = false;
+            return;
+        }
 
         blockLayerIndex = animator.GetLayerIndex(blockLayerName);
         if (blockLayerIndex != -1)
@@ -78,7 +87,7 @@ public class PlayerAnimatorControllerHandler : MonoBehaviour
     public void SetEat(bool isEating)
     {
         if (isEating) ResetAllActions();
-        animator.SetBool(EatHash, isEating);
+        animator.SetTrigger(EatHash);
     }
 
     public void SetSleep(bool isSleeping)
@@ -216,5 +225,71 @@ public class PlayerAnimatorControllerHandler : MonoBehaviour
         }
 
         animator.SetLayerWeight(blockLayerIndex, currentMaskWeight);
+    }
+    public void ResetNormalSpeed()
+    {
+        animator.speed = 1.0f;
+    }
+    public void SetFastSpeed(float newSpeed)
+    {
+        animator.speed = newSpeed;
+    }
+    public void ForceReturnToIdle(float blendDuration = 0.1f)
+    {
+        if (animator == null) return;
+
+        // 1. Clear all triggers and action booleans so nothing re-fires next frame
+        ResetAllActions();
+        animator.ResetTrigger(EatHash);
+
+        // 2. Clear all state locks and blocking input
+        isBlockingInput = false;
+        isBlockDamageLocked = false;
+        hasEnteredBlockDamageState = false;
+        isParryLocked = false;
+        hasEnteredParryState = false;
+
+        // 3. Snap upper-body mask layer weight back to 0
+        currentMaskWeight = 0f;
+        if (blockLayerIndex != -1)
+        {
+            animator.SetLayerWeight(blockLayerIndex, 0f);
+        }
+
+        // 4. Restore normal animator speed and reset locomotion parameters to idle
+        ResetNormalSpeed();
+        animator.SetBool(IdleHash, true);
+        animator.SetBool(WalkingHash, false);
+        animator.SetFloat(HorizontalHash, 0f);
+        animator.SetFloat(VerticalHash, 0f);
+
+        // 5. Bypass exit-time transitions and force Base Layer into the Idle state
+        if (blendDuration <= 0f)
+        {
+            animator.Play(idleStateName, 0, 0f);
+        }
+        else
+        {
+            animator.CrossFadeInFixedTime(idleStateName, blendDuration, 0);
+        }
+    }
+    public void PrepareForOverriddenAttack()
+    {
+        if (animator == null) return;
+
+        ResetAllActions();
+        animator.ResetTrigger(EatHash);
+
+        isBlockingInput = false;
+        isBlockDamageLocked = false;
+        hasEnteredBlockDamageState = false;
+        isParryLocked = false;
+        hasEnteredParryState = false;
+
+        currentMaskWeight = 0f;
+        if (blockLayerIndex != -1)
+        {
+            animator.SetLayerWeight(blockLayerIndex, 0f);
+        }
     }
 }
