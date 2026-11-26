@@ -9,6 +9,7 @@ public class EatInteractionVisual : MonoBehaviour
     private Material currMaterial;
     private Coroutine dissolveCoroutine;
     public UnityEvent OnDissolvedFinished;
+    public UnityEvent OnDissolveStart;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -36,6 +37,7 @@ public class EatInteractionVisual : MonoBehaviour
     private IEnumerator DissolveCoroutine()
     {
         float elapsed = 0f;
+        OnDissolveStart?.Invoke();
         while(elapsed < dissolveDuration)
         {
             elapsed += Time.deltaTime;

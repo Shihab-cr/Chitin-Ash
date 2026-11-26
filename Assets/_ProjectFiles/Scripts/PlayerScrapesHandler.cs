@@ -11,6 +11,7 @@ public class PlayerScrapesHandler : MonoBehaviour
     void Start()
     {
         playerScrapes = PlayerDataModel.LoadScrapesAmount();
+        OnScrapeChange?.Invoke(playerScrapes);
     }
     public void AddScrapesToPlayer(int scrapes)
     {

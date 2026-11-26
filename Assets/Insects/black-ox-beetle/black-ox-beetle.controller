@@ -78,6 +78,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-8492530576245060182
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SK_BlackOxBeetle01_AS_BlackOxBeetle_Charge_Attack_Start_01_SK_BlackOxBeetle01
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 27a6c598378e4fa418f9301103359f22, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &-7337268168337447404
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -836,6 +862,12 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -3376684423919185995}
     m_Position: {x: 620, y: 1140, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -8492530576245060182}
+    m_Position: {x: 254.40576, y: 1131.5024, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 4906439387988092089}
+    m_Position: {x: 472.03848, y: 1206.1304, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -8793055911765811189}
@@ -1419,6 +1451,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 9858d5c75e330cb4ab69fbe5399fd662, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &4906439387988092089
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HeavyAtk2
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 4485cf6646b3b8f449e54ce201b23399, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

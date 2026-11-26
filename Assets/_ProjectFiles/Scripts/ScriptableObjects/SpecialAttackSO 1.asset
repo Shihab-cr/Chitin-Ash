@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889230846f0177f4a9a83bea83f439ea, type: 3}
+  m_Name: SpecialAttackSO 1
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttackSO
+  dmg: 25
+  staminaCost: 20
+  attackAnimation: {fileID: 7400000, guid: 4485cf6646b3b8f449e54ce201b23399, type: 2}
+  damageRadius: 2
+  coolDownDuration: 2
+  attackVFX: {fileID: 0}
+  attackSFX: {fileID: 0}

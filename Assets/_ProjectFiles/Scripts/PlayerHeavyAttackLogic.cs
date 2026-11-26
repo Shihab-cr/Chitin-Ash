@@ -1,7 +1,7 @@
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 [System.Serializable]
 public struct HeavyAtkTierStruct
 {
@@ -11,150 +11,306 @@ public struct HeavyAtkTierStruct
     public ParticleSystem[] atkVFX;
     public Vector2 tierTimeSlot;
 }
+
 public class PlayerHeavyAttackLogic : MonoBehaviour, IAttackStrategy
 {
     [SerializeField] private PlayerAttackSO heavyAttack;
+    [Tooltip("Animation clip played while holding/charging the heavy attack.")]
+    [SerializeField] private AnimationClip chargeAnimationClip;
     [SerializeField] private float dmgDurationMultiplier = 1.2f;
     [SerializeField] private float maxChargeDuration = 2f;
     [SerializeField] private HeavyAtkTierStruct[] heavyAtkTiers;
-    [SerializeField] private float stamPerCharge= 1;
+    [SerializeField] private float stamPerCharge = 1f;
+
     private HeavyAtkTierStruct currHeavyAtkTier;
     private PlayerAttackAnimatorOverridor playerAnimatorOverridor;
+    private PlayerAnimatorControllerHandler playerAnimatorHandler;
     private PlayerAttackLogic playerAttackLogic;
     private PlayerStaminaManager playerStaminaManager;
+
     private Coroutine heavyAtkChargeCoroutine;
+    private Coroutine atkCooldownCoroutine;
+    private Coroutine unlockFailsafeCoroutine;
+
     private float chargeTimer;
-    private bool canBeUsed=true;
+    private int chargeStartFrame = -1;
+    private bool canBeUsed = true;
     private bool isCharging = false;
-    public bool IsCharging { get => isCharging; }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public bool IsCharging => isCharging;
+
+    private void Awake()
     {
         playerAttackLogic = GetComponent<PlayerAttackLogic>();
         playerStaminaManager = GetComponent<PlayerStaminaManager>();
         playerAnimatorOverridor = GetComponent<PlayerAttackAnimatorOverridor>();
+        playerAnimatorHandler = GetComponent<PlayerAnimatorControllerHandler>();
     }
+
+    private void OnDisable()
+    {
+        CancelCharge();
+        StopAttackCoroutines();
+        canBeUsed = true;
+    }
+
     public void ChargeHeavyAtk(InputAction.CallbackContext inputContext)
     {
+        if (!isActiveAndEnabled) return;
+
         if (inputContext.performed)
         {
-            if (heavyAtkChargeCoroutine != null) StopCoroutine(heavyAtkChargeCoroutine);
-            heavyAtkChargeCoroutine = StartCoroutine(ChargeHeavyAtkCoroutine());
+            CancelCharge();
+
+            chargeTimer = 0f;
+            chargeStartFrame = Time.frameCount;
             isCharging = true;
-            //go to charging animation
+
+            if (heavyAtkTiers != null && heavyAtkTiers.Length > 0)
+            {
+                currHeavyAtkTier = heavyAtkTiers[0];
+            }
+
+            if (playerAnimatorHandler != null)
+            {
+                playerAnimatorHandler.PrepareForOverriddenAttack();
+            }
+
+            if (chargeAnimationClip == null)
+            {
+                Debug.LogWarning($"[{nameof(PlayerHeavyAttackLogic)}] Charge Animation Clip is not assigned in the Inspector on {name}.", this);
+            }
+            else if (playerAnimatorOverridor != null)
+            {
+                playerAnimatorOverridor.OverrideAttackAnimation(chargeAnimationClip);
+            }
+
+            heavyAtkChargeCoroutine = StartCoroutine(ChargeHeavyAtkCoroutine());
         }
         else if (inputContext.canceled)
         {
-            if (heavyAtkChargeCoroutine != null) StopCoroutine(heavyAtkChargeCoroutine);
-            heavyAtkChargeCoroutine = null;
-            isCharging = false;
+            CancelCharge();
         }
     }
+
+    public void CancelCharge()
+    {
+        if (heavyAtkChargeCoroutine != null)
+        {
+            StopCoroutine(heavyAtkChargeCoroutine);
+            heavyAtkChargeCoroutine = null;
+        }
+        isCharging = false;
+    }
+
+    public bool HasReachedMinCharge()
+    {
+        // Ignore same-frame canceled callbacks caused by Tap or Release-Only interactions
+        if (Time.frameCount <= chargeStartFrame) return false;
+
+        if (heavyAtkTiers == null || heavyAtkTiers.Length == 0) return chargeTimer >= 0.2f;
+        return chargeTimer >= heavyAtkTiers[0].tierTimeSlot.x;
+    }
+
     public void PerformAtk()
     {
-        if (!canBeUsed || heavyAttack == null) return;
+        if (!isActiveAndEnabled || !canBeUsed || heavyAttack == null) return;
 
-
+        CancelCharge();
         canBeUsed = false;
 
         AnimationClip currClip = heavyAttack.attackAnimation;
-        if (currHeavyAtkTier.animationClip != null && heavyAtkTiers.Length > 0) currClip = currHeavyAtkTier.animationClip;
-        if (playerAnimatorOverridor != null) playerAnimatorOverridor.OverrideAttackAnimation(currClip);
-        StartCoroutine(AtkCoolDownCoroutine(currClip));
-        //play heavy atk animation in controller
+        if (heavyAtkTiers != null && heavyAtkTiers.Length > 0 && currHeavyAtkTier.animationClip != null)
+        {
+            currClip = currHeavyAtkTier.animationClip;
+        }
+
+        if (playerAnimatorHandler != null)
+        {
+            playerAnimatorHandler.PrepareForOverriddenAttack();
+        }
+
+        // Force-exits the charge animation clip and crossfades directly into the charged attack clip
+        if (playerAnimatorOverridor != null && currClip != null)
+        {
+            playerAnimatorOverridor.OverrideAttackAnimation(currClip);
+        }
+
+        StopAttackCoroutines();
+        unlockFailsafeCoroutine = StartCoroutine(UnlockFailsafeCoroutine(currClip));
     }
 
-    private IEnumerator AtkCoolDownCoroutine(AnimationClip atkClip)
+    private IEnumerator UnlockFailsafeCoroutine(AnimationClip atkClip)
     {
-        yield return new WaitForSeconds(atkClip.length);
-        yield return new WaitForSeconds(heavyAttack.coolDownDuration);
-        canBeUsed = true;
+        float animLength = atkClip != null ? atkClip.length : 0.5f;
+        yield return new WaitForSeconds(animLength + 0.05f);
+
+        if (!canBeUsed)
+        {
+            if (playerAttackLogic != null)
+                playerAttackLogic.EndAtk();
+            else
+                OnEndAtk();
+        }
+
+        unlockFailsafeCoroutine = null;
     }
+
+    private IEnumerator PostSwingCooldownCoroutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        canBeUsed = true;
+        atkCooldownCoroutine = null;
+    }
+
+    private void StopAttackCoroutines()
+    {
+        if (unlockFailsafeCoroutine != null)
+        {
+            StopCoroutine(unlockFailsafeCoroutine);
+            unlockFailsafeCoroutine = null;
+        }
+
+        if (atkCooldownCoroutine != null)
+        {
+            StopCoroutine(atkCooldownCoroutine);
+            atkCooldownCoroutine = null;
+        }
+    }
+
     private IEnumerator ChargeHeavyAtkCoroutine()
     {
         int currTierIndex = 0;
-        currHeavyAtkTier = heavyAtkTiers[currTierIndex];
+        bool hasTiers = heavyAtkTiers != null && heavyAtkTiers.Length > 0;
+        if (hasTiers)
+        {
+            currHeavyAtkTier = heavyAtkTiers[currTierIndex];
+        }
+
+        // Guard against an uninitialized 0 value in the Inspector auto-firing on frame 1
+        float effectiveMaxCharge = Mathf.Max(0.25f, maxChargeDuration);
         float totalStamSpent = 0f;
+
         while (true)
         {
             chargeTimer += Time.deltaTime;
-            if (playerStaminaManager.HasEnoughStamina(stamPerCharge*Time.deltaTime))
-            {
-                if (totalStamSpent < heavyAttack.staminaCost)
-                {
 
-                    playerStaminaManager.UseStamina(stamPerCharge * Time.deltaTime);
-                    totalStamSpent += stamPerCharge * Time.deltaTime;
+            bool hasStamina = playerStaminaManager == null || playerStaminaManager.HasEnoughStamina(stamPerCharge * Time.deltaTime);
+            if (hasStamina)
+            {
+                if (playerStaminaManager != null && heavyAttack != null && totalStamSpent < heavyAttack.staminaCost)
+                {
+                    float drain = stamPerCharge * Time.deltaTime;
+                    playerStaminaManager.UseStamina(drain);
+                    totalStamSpent += drain;
                 }
             }
             else
             {
-                if (chargeTimer >= heavyAtkTiers[0].tierTimeSlot.x)
+                float minTierTime = hasTiers ? heavyAtkTiers[0].tierTimeSlot.x : 0.2f;
+                isCharging = false;
+                heavyAtkChargeCoroutine = null;
+
+                if (chargeTimer >= minTierTime)
                 {
                     if (playerAttackLogic != null) playerAttackLogic.ExecuteAttackLogic();
-                    isCharging = false;
-                    break;
                 }
                 else
                 {
                     if (playerAttackLogic != null) playerAttackLogic.EndAtk();
-                    isCharging = false;
-                    break;
                 }
+                yield break;
             }
-            if (chargeTimer >= currHeavyAtkTier.tierTimeSlot.y)
+
+            if (hasTiers && chargeTimer >= currHeavyAtkTier.tierTimeSlot.y)
             {
                 currTierIndex = Mathf.Min(currTierIndex + 1, heavyAtkTiers.Length - 1);
                 currHeavyAtkTier = heavyAtkTiers[currTierIndex];
             }
-            if (currTierIndex >= heavyAtkTiers.Length - 1 && chargeTimer >= maxChargeDuration)
+
+            if (chargeTimer >= effectiveMaxCharge)
             {
-                if (playerAttackLogic != null) playerAttackLogic.ExecuteAttackLogic();
                 isCharging = false;
-                break;
+                heavyAtkChargeCoroutine = null;
+                if (playerAttackLogic != null) playerAttackLogic.ExecuteAttackLogic();
+                yield break;
             }
+
             yield return null;
         }
     }
+
     private float CalculateBonusDmg()
     {
-        float chargeTimeDmg = 0f;
-        chargeTimeDmg = dmgDurationMultiplier * chargeTimer;
-        return chargeTimeDmg;
+        return dmgDurationMultiplier * chargeTimer;
     }
+
     public void OnEndAtk()
     {
+        CancelCharge();
         chargeTimer = 0f;
-        isCharging = false;
-        
+        chargeStartFrame = -1;
+
+        if (unlockFailsafeCoroutine != null)
+        {
+            StopCoroutine(unlockFailsafeCoroutine);
+            unlockFailsafeCoroutine = null;
+        }
+
+        if (!isActiveAndEnabled)
+        {
+            canBeUsed = true;
+            return;
+        }
+
+        float cooldown = heavyAttack != null ? heavyAttack.coolDownDuration : 0f;
+        if (cooldown > 0f)
+        {
+            if (atkCooldownCoroutine != null) StopCoroutine(atkCooldownCoroutine);
+            atkCooldownCoroutine = StartCoroutine(PostSwingCooldownCoroutine(cooldown));
+        }
+        else
+        {
+            canBeUsed = true;
+        }
     }
+
     public float GetStaminaCost()
     {
-        return 0;
+        return 0f;
     }
+
     public bool CanPerformAttack()
     {
+        if (!isActiveAndEnabled || !canBeUsed || heavyAttack == null) return false;
+
         float minStaminaCharge = heavyAttack.staminaCost;
-        if (heavyAtkTiers != null && heavyAtkTiers.Length>0 ) minStaminaCharge = stamPerCharge * heavyAtkTiers[0].tierTimeSlot.x;
-        return canBeUsed && playerStaminaManager.HasEnoughStamina(minStaminaCharge);
+        if (heavyAtkTiers != null && heavyAtkTiers.Length > 0)
+        {
+            minStaminaCharge = stamPerCharge * heavyAtkTiers[0].tierTimeSlot.x;
+        }
+
+        return playerStaminaManager == null || playerStaminaManager.HasEnoughStamina(minStaminaCharge);
     }
+
     public float GetDamage()
     {
-        return heavyAttack.dmg + CalculateBonusDmg();
+        float baseDmg = heavyAttack != null ? heavyAttack.dmg : 0f;
+        return baseDmg + CalculateBonusDmg();
     }
+
     public PlayerAttackSO GetcurrAtkSO()
     {
         return heavyAttack;
     }
 
-    //audio and visuals should be played by the animation itself
     public void PlayCurrentTierAudio()
     {
-        //play tier audio
-    }
-    public void PlayCurrentTierVFX()
-    {
-        //Play tier vfx
+        // Play currHeavyAtkTier.audioClip
     }
 
+    public void PlayCurrentTierVFX()
+    {
+        // Play currHeavyAtkTier.atkVFX
+    }
 }

@@ -69,6 +69,7 @@ public class PlayerAttackLogic : MonoBehaviour
         {
             if (playerActionCoordinator != null && !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack))
             {
+                playerHeavyAtkLogic.CancelCharge();
                 EndAtk();
             }
         }
@@ -110,11 +111,21 @@ public class PlayerAttackLogic : MonoBehaviour
         else if (context.canceled)
         {
             if (!playerHeavyAtkLogic.IsCharging) return;
+
             if (playerActionCoordinator == null || !playerActionCoordinator.CanPerformAction(PlayerAbility.Attack))
             {
+                playerHeavyAtkLogic.CancelCharge();
                 EndAtk();
                 return;
             }
+
+            if (!playerHeavyAtkLogic.HasReachedMinCharge())
+            {
+                playerHeavyAtkLogic.CancelCharge();
+                EndAtk();
+                return;
+            }
+
             playerHeavyAtkLogic.ChargeHeavyAtk(context);
             ExecuteAttackLogic();
         }
@@ -187,7 +198,15 @@ public class PlayerAttackLogic : MonoBehaviour
             if (idmg != null && hitTargets.Add(idmg))
             {
                 damage = currAtckStrategy.GetDamage();
-                idmg.TakeDmg(damage);
+
+                if (idmg is IAttackerAwareDamageable awareTarget)
+                {
+                    awareTarget.TakeDmg(damage, gameObject);
+                }
+                else
+                {
+                    idmg.TakeDmg(damage);
+                }
             }
         }
     }
