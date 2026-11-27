@@ -2925,6 +2925,34 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 246073179}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ForceReturnToIdle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: TriggerBlockDamage
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
       propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 708802228}
@@ -2932,6 +2960,14 @@ PrefabInstance:
       propertyPath: OnMaxHealthUpgraded.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 708802228}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PlayerAnimatorControllerHandler, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4223295713969043463, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
+      propertyPath: OnHit.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4233811101051844968, guid: 5e826c2feab2d08458b1564a7c831f0a, type: 3}
       propertyPath: specialAttacks.Array.size
       value: 2
