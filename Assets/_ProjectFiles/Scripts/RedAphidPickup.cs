@@ -60,13 +60,8 @@ public class RedAphidPickup : MonoBehaviour
     private IEnumerator DissolveAndDestroy()
     {
         Vector3 startScale = transform.localScale;
-        Renderer rend = GetComponentInChildren<Renderer>();
-        Material mat = rend != null ? rend.material : null;
-        Color startColor = mat != null && mat.HasProperty("_BaseColor")
-            ? mat.GetColor("_BaseColor")
-            : (mat != null && mat.HasProperty("_Color") ? mat.color : Color.red);
-
         float elapsed = 0f;
+
         while (elapsed < dissolveDuration)
         {
             elapsed += Time.deltaTime;
@@ -74,18 +69,6 @@ public class RedAphidPickup : MonoBehaviour
 
             // Shrink smoothly to zero
             transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
-
-            // Also fade alpha if the material uses a Transparent surface type
-            if (mat != null)
-            {
-                Color faded = startColor;
-                faded.a = Mathf.Lerp(startColor.a, 0f, t);
-
-                if (mat.HasProperty("_BaseColor"))
-                    mat.SetColor("_BaseColor", faded);
-                else if (mat.HasProperty("_Color"))
-                    mat.color = faded;
-            }
 
             yield return null;
         }
